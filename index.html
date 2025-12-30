@@ -1,18 +1,120 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShieldPi</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShieldPi - Seguridad Blockchain</title>
+    
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+    <style>
+        /* Estética Cyberpunk: Morado, Azul, Verde Neón y Granate */
+        body {
+            background: radial-gradient(circle, #1a0033 0%, #050010 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container { text-align: center; padding: 20px; max-width: 400px; }
+
+        #main-shield {
+            width: 250px;
+            filter: drop-shadow(0 0 15px #0055ff);
+            transition: all 0.8s ease;
+            margin: 20px 0;
+        }
+
+        .active-shield {
+            filter: drop-shadow(0 0 30px #39FF14) hue-rotate(90deg) !important;
+            transform: scale(1.05);
+        }
+
+        h1 { color: #39FF14; text-transform: uppercase; letter-spacing: 3px; }
+
+        #status-text {
+            font-weight: bold;
+            color: #800020; /* Granate inicial */
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #39FF14;
+        }
+
+        .btn-action {
+            background-color: transparent;
+            color: #39FF14;
+            border: 2px solid #39FF14;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0 15px 0 15px;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+            margin-top: 20px;
+        }
+
+        .btn-action:active { background-color: #39FF14; color: #050010; }
+        
+        .footer-nav { margin-top: 30px; font-size: 12px; opacity: 0.6; }
+        .footer-nav a { color: #0055ff; text-decoration: none; margin: 0 10px; }
+    </style>
 </head>
 <body>
-  <h1>ShieldPi</h1>
-  <p>Pi Network App - Tesnet</p>
-  
-  <script>
-  // Esto debe ir dentro de etiquetas script para que no se vea como texto
-  Pi.init({ version:"2.0", sandbox:true});
-  </script>
+
+    <div class="app-container">
+        <h1>ShieldPi</h1>
+        <p style="font-size: 0.8em; color: #aaa;">Pi Network App - Testnet</p>
+        
+        <div class="shield-box">
+            <img src="shield.png" id="main-shield" alt="ShieldPi Logo">
+        </div>
+
+        <div id="status-text">SISTEMA DESPROTEGIDO</div>
+
+        <button class="btn-action" onclick="runShield()">Activar Escudo</button>
+
+        <div class="footer-nav">
+            <a href="#" onclick="showPrivacy()">Privacidad</a> | 
+            <a href="#" onclick="alert('ShieldPi v1.0 - Pi Network Ecosystem')">Info</a>
+        </div>
+    </div>
+
+    <script>
+        // INICIALIZACIÓN DEL SDK DE PI
+        try {
+            Pi.init({ version: "2.0", sandbox: true });
+            console.log("Pi SDK inicializado correctamente");
+        } catch (err) {
+            console.error("Error al cargar el SDK:", err);
+        }
+
+        function runShield() {
+            const status = document.getElementById('status-text');
+            const img = document.getElementById('main-shield');
+            
+            status.innerText = "SINCRONIZANDO CON PI NETWORK...";
+            status.style.color = "#0055ff"; 
+
+            setTimeout(() => {
+                status.innerText = "ESCUDO ACTIVADO - PROTECCIÓN TOTAL";
+                status.style.color = "#39FF14"; 
+                img.classList.add('active-shield');
+                
+                // Simulación de autenticación Pi
+                alert("ShieldPi: Sesión protegida en la Testnet.");
+            }, 2500);
+        }
+
+        function showPrivacy() {
+            alert("POLÍTICA DE PRIVACIDAD:\n\nShieldPi no recolecta datos personales. La autenticación se realiza mediante el SDK oficial de Pi.");
+        }
+    </script>
+
 </body>
 </html>
