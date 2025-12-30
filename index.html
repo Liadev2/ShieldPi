@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShieldPi - Universo Digital</title>
+    <title>ShieldPi - Ecosistema Pi</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <style>
         :root {
@@ -15,90 +15,95 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #050010; font-family: 'Segoe UI', sans-serif;
+            background: #050010; font-family: 'Courier New', Courier, monospace;
             overflow: hidden; color: white;
         }
 
-        /* FONDO ESPACIAL ANIMADO */
+        /* FONDO: Universo Dinámico */
         #universe {
             position: fixed; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1a0033 0%, #050010 100%);
             z-index: -1;
         }
 
-        /* ICONOS PARPADEANTES (Estrellas) */
-        .star-icon {
-            position: absolute; opacity: 0.5;
-            animation: breathe 3s infinite ease-in-out;
+        /* Candados y Escudos parpadeantes (Estrellas) */
+        .cosmic-icon {
+            position: absolute; opacity: 0.6;
+            animation: twinkle 4s infinite ease-in-out;
+            color: var(--star-blue);
+            filter: drop-shadow(0 0 5px var(--star-blue));
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.9; transform: scale(1.2); }
+        }
+
+        /* Estrellas Fugaces (Datos / Blockchain) */
+        .shooting-data {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, var(--neon-green), transparent);
+            opacity: 0;
+            animation: dataFly 3s linear infinite;
+        }
+
+        @keyframes dataFly {
+            0% { transform: translateX(-100px) translateY(0); opacity: 0; width: 0; }
+            10% { opacity: 1; width: 150px; }
+            100% { transform: translateX(100vw) translateY(100px); opacity: 0; width: 200px; }
+        }
+
+        /* INTERFAZ */
+        .app-container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; height: 100vh;
+        }
+
+        /* Título SHIELDPI Mezclado */
+        .title-container { margin-bottom: 20px; }
+        .shield-text { color: var(--neon-green); font-size: 35px; font-weight: bold; letter-spacing: 5px; }
+        .pi-text { color: var(--pi-purple); font-size: 35px; font-weight: bold; text-shadow: 0 0 10px var(--pi-purple); }
+
+        /* EL ESCUDO CENTRAL (Detalle 1.5cm aprox) */
+        .shield-center {
+            position: relative;
+            width: 160px; height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 4px solid var(--neon-green);
+            box-shadow: 0 0 25px var(--star-blue); /* Luz azul que bordea */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .pi-logo-center {
+            font-size: 80px; color: var(--pi-purple);
+            filter: drop-shadow(0 0 10px var(--pi-purple));
+        }
+
+        /* BOTÓN RETRO-FUTURISTA esquinas cortadas */
+        .btn-retro {
+            margin-top: 40px;
+            padding: 18px 45px;
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            font-size: 18px; font-weight: bold;
+            clip-path: polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%);
+            cursor: pointer;
+            animation: breathe 2.5s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 0.8; transform: scale(1.1); filter: drop-shadow(0 0 5px var(--star-blue)); }
+            0%, 100% { box-shadow: 0 0 5px var(--neon-green); opacity: 0.7; }
+            50% { box-shadow: 0 0 25px var(--neon-green); opacity: 1; }
         }
 
-        /* ESTRELLAS FUGACES (Datos/Blockchain) */
-        .data-stream {
-            position: absolute; width: 2px; height: 80px;
-            background: linear-gradient(to bottom, transparent, var(--neon-green));
-            opacity: 0.7; animation: shootingStar 4s linear infinite;
-        }
-
-        @keyframes shootingStar {
-            0% { transform: translateY(-100px) translateX(0) rotate(45deg); opacity: 1; }
-            100% { transform: translateY(100vh) translateX(200px) rotate(45deg); opacity: 0; }
-        }
-
-        /* INTERFAZ PRINCIPAL */
-        .app-container {
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: center; height: 100vh; text-align: center;
-        }
-
-        .logo-shield {
-            font-size: 2.5rem; letter-spacing: 5px; margin-bottom: 20px;
-            color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);
-        }
-        .logo-pi {
-            background: linear-gradient(to right, var(--neon-green), var(--pi-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-
-        /* EL ESCUDO CENTRAL */
-        .main-shield-container {
-            position: relative; width: 200px; height: 200px;
-            border: 3px solid var(--neon-green);
-            border-radius: 50% 50% 10% 10%; /* Forma geométrica de escudo */
-            box-shadow: 0 0 25px var(--star-blue), inset 0 0 15px var(--star-blue);
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .pi-symbol {
-            font-size: 80px; color: var(--pi-purple);
-            text-shadow: 0 0 20px var(--pi-purple);
-        }
-
-        /* BOTONES RETRO-FUTURISTAS */
-        .btn-retro {
-            margin-top: 40px; padding: 15px 40px;
-            background: transparent; color: var(--neon-green);
-            border: 2px solid var(--neon-green);
-            font-weight: bold; text-transform: uppercase;
-            clip-path: polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%);
-            cursor: pointer; transition: 0.3s;
-            animation: glowBreathe 2s infinite ease-in-out;
-        }
-
-        @keyframes glowBreathe {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-green); }
-            50% { box-shadow: 0 0 20px var(--neon-green); }
-        }
-
-        .exaltacion {
-            font-size: 0.7rem; margin-top: 20px; color: var(--star-blue);
-            max-width: 250px; opacity: 0.8; font-style: italic;
+        /* EXALTACIÓN FINAL */
+        .exaltation {
+            margin-top: 30px; font-size: 13px; color: var(--star-blue);
+            text-align: center; max-width: 300px; line-height: 1.5;
+            text-transform: uppercase; letter-spacing: 1px;
         }
     </style>
 </head>
@@ -107,47 +112,53 @@
     <div id="universe"></div>
 
     <div class="app-container">
-        <h1 class="logo-shield">SHIELD<span class="logo-pi">PI</span></h1>
-
-        <div class="main-shield-container">
-            <div class="pi-symbol">π</div>
+        <div class="title-container">
+            <span class="shield-text">SHIELD</span><span class="pi-text">PI</span>
         </div>
 
-        <button class="btn-retro" onclick="startProtection()">Activar Sistema</button>
+        <div class="shield-center">
+            <div class="pi-logo-center">π</div>
+        </div>
 
-        <p class="exaltacion">"El futuro es el mundo digital y Pi Network es nuestro Ecosistema"</p>
+        <button class="btn-retro" onclick="initPi()">SISTEMA DE PROTECCIÓN</button>
+
+        <p class="exaltation">
+            "El futuro es el mundo digital y Pi Network es nuestro Ecosistema!"
+        </p>
     </div>
 
     <script>
-        // Crear Universo (Estrellas fugaces y parpadeo)
-        const universe = document.getElementById('universe');
-        const icons = ['🔒', '🛡️', '◈', '✦'];
+        // Inicializar SDK
+        try { Pi.init({ version: "2.0", sandbox: true }); } catch(e) {}
 
-        for(let i=0; i<30; i++) {
+        const universe = document.getElementById('universe');
+        const cosmicIcons = ['🔒', '🛡️'];
+
+        // Crear iconos parpadeantes
+        for(let i=0; i<40; i++) {
             let icon = document.createElement('div');
-            icon.className = 'star-icon';
-            icon.innerText = icons[Math.floor(Math.random()*icons.length)];
+            icon.className = 'cosmic-icon';
+            icon.innerText = cosmicIcons[Math.floor(Math.random()*cosmicIcons.length)];
             icon.style.left = Math.random() * 100 + 'vw';
             icon.style.top = Math.random() * 100 + 'vh';
             icon.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            icon.style.animationDelay = Math.random() * 3 + 's';
+            icon.style.animationDelay = Math.random() * 5 + 's';
             universe.appendChild(icon);
         }
 
+        // Crear Estrellas Fugaces (Red Blockchain)
         setInterval(() => {
-            let star = document.createElement('div');
-            star.className = 'data-stream';
-            star.style.left = Math.random() * 100 + 'vw';
-            universe.appendChild(star);
-            setTimeout(() => star.remove(), 4000);
-        }, 1000);
+            let data = document.createElement('div');
+            data.className = 'shooting-data';
+            data.style.top = Math.random() * 100 + 'vh';
+            data.style.left = '-100px';
+            universe.appendChild(data);
+            setTimeout(() => data.remove(), 3000);
+        }, 1500);
 
-        function startProtection() {
-            alert("ShieldPi: Iniciando protocolo de seguridad en el ecosistema Pi...");
+        function initPi() {
+            alert("Accediendo a la red Blockchain... ShieldPi activado.");
         }
-
-        // Inicializar SDK
-        try { Pi.init({ version: "2.0", sandbox: true }); } catch(e) {}
     </script>
 </body>
 </html>
