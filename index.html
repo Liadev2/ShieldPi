@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShieldPi - Ecosistema Pi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <style>
         :root {
             --neon-green: #39FF14;
             --pi-purple: #bc26ff;
             --star-blue: #00d4ff;
-            --granate: #800020;
+            --deep-space: #050010;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #050010; font-family: 'Courier New', Courier, monospace;
+            background: var(--deep-space); 
+            font-family: 'Rajdhani', sans-serif;
             overflow: hidden; color: white;
         }
 
@@ -26,84 +28,117 @@
             z-index: -1;
         }
 
-        /* Candados y Escudos parpadeantes (Estrellas) */
+        /* Iconos Cósmicos */
         .cosmic-icon {
             position: absolute; opacity: 0.6;
             animation: twinkle 4s infinite ease-in-out;
             color: var(--star-blue);
             filter: drop-shadow(0 0 5px var(--star-blue));
+            user-select: none;
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 0.9; transform: scale(1.2); }
+            0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
+            50% { opacity: 0.9; transform: scale(1.2) rotate(10deg); }
         }
 
-        /* Estrellas Fugaces (Datos / Blockchain) */
-        .shooting-data {
-            position: absolute;
-            height: 2px;
-            background: linear-gradient(to right, var(--neon-green), transparent);
-            opacity: 0;
-            animation: dataFly 3s linear infinite;
-        }
-
-        @keyframes dataFly {
-            0% { transform: translateX(-100px) translateY(0); opacity: 0; width: 0; }
-            10% { opacity: 1; width: 150px; }
-            100% { transform: translateX(100vw) translateY(100px); opacity: 0; width: 200px; }
-        }
-
-        /* INTERFAZ */
+        /* INTERFAZ CENTRAL */
         .app-container {
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; height: 100vh;
+            perspective: 1000px;
         }
 
-        /* Título SHIELDPI Mezclado */
-        .title-container { margin-bottom: 20px; }
-        .shield-text { color: var(--neon-green); font-size: 35px; font-weight: bold; letter-spacing: 5px; }
-        .pi-text { color: var(--pi-purple); font-size: 35px; font-weight: bold; text-shadow: 0 0 10px var(--pi-purple); }
+        .title-container { 
+            margin-bottom: 30px; 
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+        }
+        
+        .shield-text { color: var(--neon-green); font-size: 42px; font-weight: bold; letter-spacing: 8px; }
+        .pi-text { color: var(--pi-purple); font-size: 42px; font-weight: bold; text-shadow: 0 0 20px var(--pi-purple); }
 
-        /* EL ESCUDO CENTRAL (Detalle 1.5cm aprox) */
+        /* EL ESCUDO CENTRAL MEJORADO */
         .shield-center {
             position: relative;
-            width: 160px; height: 180px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 4px solid var(--neon-green);
-            box-shadow: 0 0 25px var(--star-blue); /* Luz azul que bordea */
-            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+            width: 180px; height: 210px;
+            background: rgba(188, 38, 255, 0.05);
+            border: 3px solid var(--neon-green);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.2);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%);
             display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .shield-center:hover {
+            transform: scale(1.05) rotateY(10deg);
+        }
+
+        /* Efecto de Escáner Láser */
+        .shield-center::after {
+            content: "";
+            position: absolute;
+            top: -100%; width: 100%; height: 20%;
+            background: linear-gradient(to bottom, transparent, var(--neon-green), transparent);
+            opacity: 0.5;
+            animation: scan 3s infinite linear;
+        }
+
+        @keyframes scan {
+            0% { top: -20%; }
+            100% { top: 120%; }
         }
 
         .pi-logo-center {
-            font-size: 80px; color: var(--pi-purple);
-            filter: drop-shadow(0 0 10px var(--pi-purple));
+            font-size: 90px; color: var(--pi-purple);
+            filter: drop-shadow(0 0 15px var(--pi-purple));
+            z-index: 2;
+            animation: pulse-pi 2s infinite ease-in-out;
         }
 
-        /* BOTÓN RETRO-FUTURISTA esquinas cortadas */
+        @keyframes pulse-pi {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* BOTÓN RETRO-FUTURISTA */
         .btn-retro {
-            margin-top: 40px;
-            padding: 18px 45px;
-            background: transparent;
+            margin-top: 50px;
+            padding: 20px 50px;
+            background: rgba(57, 255, 20, 0.1);
             color: var(--neon-green);
             border: 2px solid var(--neon-green);
-            font-size: 18px; font-weight: bold;
-            clip-path: polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px; font-weight: bold;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
             cursor: pointer;
-            animation: breathe 2.5s infinite ease-in-out;
+            position: relative;
+            transition: all 0.3s;
+            letter-spacing: 2px;
         }
 
-        @keyframes breathe {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-green); opacity: 0.7; }
-            50% { box-shadow: 0 0 25px var(--neon-green); opacity: 1; }
+        .btn-retro:hover {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 40px var(--neon-green);
+            transform: translateY(-3px);
         }
 
         /* EXALTACIÓN FINAL */
         .exaltation {
-            margin-top: 30px; font-size: 13px; color: var(--star-blue);
-            text-align: center; max-width: 300px; line-height: 1.5;
-            text-transform: uppercase; letter-spacing: 1px;
+            margin-top: 40px; font-size: 14px; color: var(--star-blue);
+            text-align: center; max-width: 350px; line-height: 1.6;
+            text-transform: uppercase; letter-spacing: 2px;
+            border-top: 1px solid rgba(0, 212, 255, 0.3);
+            padding-top: 15px;
+        }
+
+        /* Datos de fondo */
+        .data-stream {
+            position: absolute; color: var(--neon-green);
+            font-size: 10px; font-family: monospace;
+            white-space: nowrap; opacity: 0.4;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -120,10 +155,10 @@
             <div class="pi-logo-center">π</div>
         </div>
 
-        <button class="btn-retro" onclick="initPi()">SISTEMA DE PROTECCIÓN</button>
+        <button class="btn-retro" onclick="initPi()">INICIAR PROTOCOLO</button>
 
         <p class="exaltation">
-            "El futuro es el mundo digital y Pi Network es nuestro Ecosistema!"
+            "El futuro es el mundo digital y <br><strong>Pi Network</strong> es nuestro Ecosistema"
         </p>
     </div>
 
@@ -132,32 +167,52 @@
         try { Pi.init({ version: "2.0", sandbox: true }); } catch(e) {}
 
         const universe = document.getElementById('universe');
-        const cosmicIcons = ['🔒', '🛡️'];
+        const icons = ['🔒', '🛡️', '⚡', '01'];
 
-        // Crear iconos parpadeantes
-        for(let i=0; i<40; i++) {
-            let icon = document.createElement('div');
-            icon.className = 'cosmic-icon';
-            icon.innerText = cosmicIcons[Math.floor(Math.random()*cosmicIcons.length)];
-            icon.style.left = Math.random() * 100 + 'vw';
-            icon.style.top = Math.random() * 100 + 'vh';
-            icon.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            icon.style.animationDelay = Math.random() * 5 + 's';
-            universe.appendChild(icon);
+        // Crear universo de iconos y datos
+        function createStars() {
+            for(let i=0; i<50; i++) {
+                let icon = document.createElement('div');
+                icon.className = 'cosmic-icon';
+                icon.innerText = icons[Math.floor(Math.random()*icons.length)];
+                icon.style.left = Math.random() * 100 + 'vw';
+                icon.style.top = Math.random() * 100 + 'vh';
+                icon.style.fontSize = (Math.random() * 12 + 8) + 'px';
+                icon.style.animationDelay = Math.random() * 5 + 's';
+                universe.appendChild(icon);
+            }
         }
 
-        // Crear Estrellas Fugaces (Red Blockchain)
-        setInterval(() => {
-            let data = document.createElement('div');
-            data.className = 'shooting-data';
-            data.style.top = Math.random() * 100 + 'vh';
-            data.style.left = '-100px';
-            universe.appendChild(data);
-            setTimeout(() => data.remove(), 3000);
-        }, 1500);
+        // Crear flujos de datos aleatorios
+        function createDataStreams() {
+            setInterval(() => {
+                const stream = document.createElement('div');
+                stream.className = 'data-stream';
+                stream.innerText = Math.random().toString(16).substring(2, 15);
+                stream.style.left = Math.random() * 100 + 'vw';
+                stream.style.top = Math.random() * 100 + 'vh';
+                
+                const anim = stream.animate([
+                    { transform: 'translateY(0)', opacity: 0 },
+                    { opacity: 0.5, offset: 0.2 },
+                    { transform: 'translateY(-100px)', opacity: 0 }
+                ], { duration: 3000 });
+
+                universe.appendChild(stream);
+                anim.onfinish = () => stream.remove();
+            }, 500);
+        }
+
+        createStars();
+        createDataStreams();
 
         function initPi() {
-            alert("Accediendo a la red Blockchain... ShieldPi activado.");
+            const btn = document.querySelector('.btn-retro');
+            btn.innerText = "ACCEDIENDO...";
+            setTimeout(() => {
+                alert("🔒 PROTOCOLO DE SEGURIDAD ACTIVADO\nConectando con el Nodo Pi...");
+                btn.innerText = "SISTEMA PROTEGIDO";
+            }, 1000);
         }
     </script>
 </body>
