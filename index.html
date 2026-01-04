@@ -3,195 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShieldPi - Guardian Interface</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --pi-purple: #543391; /* Morado oficial Pi Network */
-            --cyan-neon: #00f2ff; /* Cyan para el aura y escáner */
-            --bg-dark: #0a0b10;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* Aura de Energía Cyan */
-        .shield-aura {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, rgba(0, 242, 255, 0.1) 0%, transparent 75%);
-            box-shadow: 0 0 60px rgba(0, 242, 255, 0.05);
-            transition: all 0.5s ease;
-        }
-
-        /* Borde Neón Giratorio Cyan */
-        .shield-border {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px dashed var(--cyan-neon);
-            animation: rotate 25s linear infinite;
-            box-shadow: 0 0 15px var(--cyan-neon), inset 0 0 10px var(--cyan-neon);
-            opacity: 0.7;
-        }
-
-        /* Línea de Escaneo Cyan */
-        .scanner-line {
-            position: absolute;
-            width: 75%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
-            box-shadow: 0 0 15px var(--cyan-neon);
-            top: 20%;
-            animation: scan 3.5s ease-in-out infinite;
-            z-index: 2;
-        }
-
-        /* Botón Central Pi - Ahora Morado */
-        .pi-button {
-            width: 130px;
-            height: 130px;
-            background: linear-gradient(145deg, var(--pi-purple), #3b2366);
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Crimson Pro', serif; /* Fuente para Pi tradicional */
-            font-size: 75px;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(84, 51, 145, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .pi-button:active { 
-            transform: scale(0.92);
-            box-shadow: 0 0 40px var(--pi-purple);
-        }
-
-        /* Panel de Estado */
-        .status-panel {
-            margin-top: 30px;
-            text-align: center;
-            letter-spacing: 1.5px;
-        }
-
-        #msg {
-            font-weight: bold;
-            color: var(--cyan-neon);
-            text-shadow: 0 0 5px var(--cyan-neon);
-            margin-bottom: 5px;
-        }
-
-        #health {
-            font-family: monospace;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        /* Menú Inferior Modernizado */
-        .menu-grid {
-            margin-top: 40px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            width: 85%;
-            max-width: 380px;
-        }
-
-        .menu-item {
-            background: rgba(84, 51, 145, 0.1);
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            padding: 16px;
-            text-align: center;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .menu-item:hover {
-            background: rgba(84, 51, 145, 0.25);
-            border-color: var(--cyan-neon);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.1);
-        }
-
-        /* Animaciones */
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes scan { 
-            0%, 100% { top: 25%; opacity: 0; }
-            50% { top: 75%; opacity: 1; }
-        }
-
-    </style>
+    <title>Pi Guardian MVP</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
 <body>
 
-    <div class="shield-aura">
-        <div class="shield-border"></div>
-        <div class="scanner-line"></div>
-        <button class="pi-button" onclick="diagnostico()">π</button>
+    <div id="app-container">
+        <section id="home" class="screen active">
+            <h1>🛡️ Pi Guardian</h1>
+            <p>Aprende a proteger la red y optimizar tu Nodo.</p>
+            <button onclick="showScreen('mision1')">Empezar Misión</button>
+            <button onclick="showScreen('checklist')">Test de Salud del Nodo</button>
+        </section>
+
+        <section id="mision1" class="screen">
+            <h2>Misión 1: El Portal Invisible</h2>
+            <div id="mision-content">
+                <p id="mision-text">El manual dice que el Nodo necesita puertos específicos. ¿Qué haces?</p>
+                <button onclick="checkMision('A')">Abrir todos (1-65535)</button>
+                <button onclick="checkMision('B')">Abrir 31400-31409</button>
+            </div>
+            <button class="back-btn" onclick="showScreen('home')">Volver</button>
+        </section>
+
+        <section id="checklist" class="screen">
+            <h2>📊 Diagnóstico de Salud</h2>
+            <div id="quiz-container">
+                </div>
+            <button class="back-btn" onclick="showScreen('home')">Volver</button>
+        </section>
+
+        <section id="results" class="screen">
+            <h2 id="result-title"></h2>
+            <p id="result-text"></p>
+            <button onclick="showScreen('home')">Finalizar</button>
+        </section>
     </div>
 
-    <div class="status-panel">
-        <div id="msg">SHIELDPI: READY</div>
-        <div id="health">NODE HEALTH: 0%</div>
-    </div>
-
-    <div class="menu-grid">
-        <div class="menu-item" onclick="alert('Iniciando Simulador Nodo...')">Nodo Pi</div>
-        <div class="menu-item" onclick="alert('Iniciando Academia...')">Seguridad</div>
-        <div class="menu-item" onclick="alert('Optimizando para IA...')">IA Optimizer</div>
-        <div class="menu-item" onclick="alert('Cargando Biblioteca Scams...')">Anti-Scam</div>
-    </div>
-
-    <script>
-        function diagnostico() {
-            const msg = document.getElementById('msg');
-            const health = document.getElementById('health');
-            const aura = document.querySelector('.shield-aura');
-            
-            msg.innerText = "ESCANEO EN CURSO...";
-            msg.style.color = "#ffffff";
-            
-            let prog = 0;
-            const interval = setInterval(() => {
-                prog += 2;
-                health.innerText = `NODE HEALTH: ${prog}%`;
-                
-                if(prog >= 100) {
-                    clearInterval(interval);
-                    msg.innerText = "SISTEMA PROTEGIDO";
-                    msg.style.color = "var(--cyan-neon)";
-                    // Efecto de pulso al terminar
-                    aura.style.boxShadow = "0 0 80px rgba(0, 242, 255, 0.3)";
-                    setTimeout(() => {
-                        aura.style.boxShadow = "0 0 50px rgba(0, 242, 255, 0.1)";
-                    }, 500);
-                }
-            }, 50);
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
