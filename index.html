@@ -35,8 +35,9 @@
         }
         .hidden-screen { display: none; }
     </style>
-        
-
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 
 <body class="bg-slate-900 text-white font-sans pb-24">
@@ -58,15 +59,15 @@
                     <p class="text-[10px] text-slate-400">NODO</p>
                     <p id="status-nodo" class="text-sm font-bold text-green-400">ACTIVO</p>
                 </div>
-                <div class="bg-slate-800 p-3 rounded-xl text-center">
-                    <p class="text-[10px] text-slate-400">PUERTOS</p>
-                    <p class="text-sm font-bold text-yellow-400">OPEN</p>
+                <div class="bg-slate-800 p-3 rounded-xl text-center border border-purple-500/20 shadow-lg" id="score-card">
+                    <p class="text-[10px] text-slate-400 uppercase">Misiones</p>
+                    <p id="misiones-count" class="text-sm font-bold text-purple-400">0 / 5</p>
                 </div>
             </div>
 
             <div class="w-full max-w-sm p-6 bg-slate-800 rounded-2xl border border-slate-700">
                 <h2 class="text-md font-bold mb-4 flex items-center">🛡️ Detector de Scams</h2>
-                <input type="text" id="scam-input" placeholder="Pega dirección o frase aquí..." 
+                <input type="text" id="scam-input" placeholder="Analizar dirección o enlace..." 
                     class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-purple-500">
                 <div id="scan-result" class="mt-4 p-3 rounded-lg hidden text-center font-bold text-sm"></div>
             </div>
@@ -76,64 +77,73 @@
     <main id="screen-misiones" class="screen hidden-screen p-6">
         <h2 class="text-xl font-bold text-purple-400 mb-4">Misiones Diarias</h2>
         <div class="space-y-4">
-            <div class="bg-slate-800 p-4 rounded-xl flex justify-between items-center border-l-4 border-purple-500">
+            <div id="mision-1-card" class="bg-slate-800 p-4 rounded-xl flex justify-between items-center border-l-4 border-purple-500">
                 <div>
                     <h3 class="font-bold text-sm">1. La Llave Maestra</h3>
-                    <p class="text-[10px] text-slate-400">Aprende sobre la Seed Phrase</p>
+                    <p class="text-[10px] text-slate-400">¿Cómo proteger tu Seed Phrase?</p>
                 </div>
-                <button class="bg-purple-600 px-3 py-1 rounded-lg text-xs font-bold">EMPEZAR</button>
+                <button onclick="openMision(1)" class="bg-purple-600 px-3 py-1 rounded-lg text-xs font-bold active:scale-95 transition">EMPEZAR</button>
             </div>
-            <p class="text-center text-slate-500 text-xs mt-10 italic">Completa misiones para obtener tu Diploma.</p>
+            <p class="text-center text-slate-500 text-[10px] mt-10 italic">Completa todas para desbloquear tu Diploma.</p>
         </div>
     </main>
 
     <main id="screen-pc" class="screen hidden-screen p-6">
-        <h2 class="text-xl font-bold text-purple-400 mb-2 text-center">Calculadora Cómputo IA</h2>
+        <h2 class="text-xl font-bold text-purple-400 mb-2 text-center text-sm">Calculadora Cómputo IA</h2>
         <div class="space-y-4 mt-6">
             <div class="bg-slate-800 p-4 rounded-xl">
-                <label class="text-[10px] text-purple-300 block mb-2 font-bold uppercase">Procesador (CPU)</label>
-                <select id="cpu-select" class="w-full bg-slate-900 border border-slate-700 p-2 rounded-lg text-sm">
+                <label class="text-[10px] text-purple-300 block mb-2 font-bold uppercase tracking-widest">CPU</label>
+                <select id="cpu-select" class="w-full bg-slate-900 border border-slate-700 p-2 rounded-lg text-sm appearance-none">
                     <option value="1">Básico (i3 / Ryzen 3)</option>
                     <option value="2" selected>Medio (i5 / Ryzen 5)</option>
-                    <option value="4">Alto (i9 / Ryzen 9)</option>
+                    <option value="4">Alto (i7 / i9 / Ryzen 9)</option>
                 </select>
             </div>
-            <div class="bg-slate-800 p-4 rounded-xl text-center border border-purple-500/30 hidden" id="result-ia">
-                <p class="text-xs text-slate-400 uppercase">Potencia Estimada</p>
-                <h3 id="score-text" class="text-3xl font-black text-white my-1">--</h3>
-                <p id="advice-text" class="text-[10px] text-slate-300 italic"></p>
+            <div class="bg-slate-800 p-4 rounded-xl border border-purple-500/30 hidden animate-pulse" id="result-ia">
+                <p class="text-[10px] text-slate-400 uppercase text-center">Nivel de Potencia IA</p>
+                <h3 id="score-text" class="text-3xl font-black text-white text-center my-1">--</h3>
             </div>
-            <button onclick="calcularIA()" class="w-full bg-purple-600 py-4 rounded-xl font-bold shadow-lg">CALCULAR</button>
+            <button onclick="calcularIA()" class="w-full bg-purple-600 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition">ANALIZAR HARDWARE</button>
         </div>
     </main>
 
     <div id="modal-alert" class="modal-overlay">
         <div class="modal-content">
             <div class="warning-icon mb-4">⚠️</div>
-            <h3 class="text-xl font-bold text-red-500 mb-2 uppercase">¡Peligro!</h3>
+            <h3 class="text-xl font-bold text-red-500 mb-2 uppercase italic">¡Peligro!</h3>
             <p id="modal-text" class="text-slate-300 text-sm mb-6"></p>
             <button onclick="closeModal()" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl">ENTENDIDO</button>
         </div>
     </div>
 
+    <div id="modal-mision" class="modal-overlay">
+        <div class="modal-content border-purple-500 shadow-purple-500/20">
+            <h3 class="text-lg font-bold text-purple-400 mb-4 uppercase">Misión 1: La Llave</h3>
+            <p class="text-xs text-slate-300 mb-6 leading-relaxed">
+                ¿Cuál es el lugar <b>MÁS SEGURO</b> para guardar tus 24 palabras (Seed Phrase)?
+            </p>
+            <div class="space-y-3">
+                <button onclick="checkMision(false)" class="w-full p-3 bg-slate-700 rounded-lg text-xs hover:bg-slate-600">En un mensaje de WhatsApp</button>
+                <button onclick="checkMision(true)" class="w-full p-3 bg-slate-700 rounded-lg text-xs hover:bg-slate-600">En papel físico bien escondido</button>
+                <button onclick="checkMision(false)" class="w-full p-3 bg-slate-700 rounded-lg text-xs hover:bg-slate-600">En una nota de mi móvil</button>
+            </div>
+            <button onclick="closeMision()" class="mt-6 text-slate-500 text-[10px] uppercase underline">Cerrar</button>
+        </div>
+    </div>
+
     <nav class="fixed bottom-0 w-full bg-slate-900 border-t border-slate-800 flex justify-around p-4 text-[10px] text-slate-500 z-50">
-        <button onclick="nav('home')" id="nav-home" class="flex flex-col items-center text-purple-400 font-bold">
-            <span>HOME</span>
-        </button>
-        <button onclick="nav('misiones')" id="nav-misiones" class="flex flex-col items-center">
-            <span>MISIONES</span>
-        </button>
-        <button onclick="nav('pc')" id="nav-pc" class="flex flex-col items-center">
-            <span>PC-IA</span>
-        </button>
+        <button onclick="nav('home')" id="nav-home" class="flex flex-col items-center text-purple-400 font-bold"><span>HOME</span></button>
+        <button onclick="nav('misiones')" id="nav-misiones" class="flex flex-col items-center"><span>MISIONES</span></button>
+        <button onclick="nav('pc')" id="nav-pc" class="flex flex-col items-center"><span>PC-IA</span></button>
     </nav>
 
     <script>
-        // NAVEGACIÓN
+        // ESTADO DE LA APP
+        let misionesCompletadas = 0;
+
         function nav(target) {
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden-screen'));
             document.getElementById('screen-' + target).classList.remove('hidden-screen');
-            
             document.querySelectorAll('nav button').forEach(b => {
                 b.classList.remove('text-purple-400', 'font-bold');
                 b.classList.add('text-slate-500');
@@ -141,55 +151,70 @@
             document.getElementById('nav-' + target).classList.add('text-purple-400', 'font-bold');
         }
 
-        // DETECTOR SCAMS
+        // DETECTOR
         const scamInput = document.getElementById('scam-input');
         const scanResult = document.getElementById('scan-result');
         const shieldSvg = document.querySelector('#main-shield svg');
-        const modal = document.getElementById('modal-alert');
-
-        function checkSeedPhrase(text) {
-            const words = text.trim().split(/\s+/);
-            return (words.length === 12 || words.length === 24);
-        }
+        const modalAlert = document.getElementById('modal-alert');
 
         scamInput.addEventListener('input', (e) => {
             const val = e.target.value.trim();
             if(!val) { scanResult.classList.add('hidden'); return; }
             scanResult.classList.remove('hidden');
 
-            if (checkSeedPhrase(val)) {
-                document.getElementById('modal-text').innerHTML = "Has pegado una <b>Frase Semilla</b>. Nunca la compartas en ninguna App fuera de la Wallet oficial.";
-                modal.classList.add('active');
-                shieldSvg.classList.remove('text-purple-500');
-                shieldSvg.classList.add('text-red-600');
+            const words = val.split(/\s+/);
+            if (words.length === 12 || words.length === 24) {
+                document.getElementById('modal-text').innerHTML = "Has pegado una <b>Frase Semilla</b>. <br><br>Si alguien la ve, vaciará tu billetera. NUNCA la pegues en sitios web o apps externas.";
+                modalAlert.classList.add('active');
+                shieldSvg.classList.replace('text-purple-500', 'text-red-600');
                 return;
             }
 
-            if (val.includes("scam") || val.length > 25) { // Simulación
-                scanResult.innerText = "🔴 DIRECCIÓN SOSPECHOSA";
-                scanResult.className = "mt-4 p-3 rounded-lg bg-red-500/20 text-red-400 border border-red-500";
-            } else {
-                scanResult.innerText = "🟡 SIN HISTORIAL - PRECAUCIÓN";
-                scanResult.className = "mt-4 p-3 rounded-lg bg-yellow-500/20 text-yellow-400 border border-yellow-500";
+            if (val.length > 30) {
+                scanResult.innerText = "🟡 DIRECCIÓN SIN HISTORIAL - PRECAUCIÓN";
+                scanResult.className = "mt-4 p-3 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs";
             }
         });
 
         function closeModal() {
-            modal.classList.remove('active');
+            modalAlert.classList.remove('active');
             scamInput.value = "";
             scanResult.classList.add('hidden');
-            shieldSvg.classList.add('text-purple-500');
-            shieldSvg.classList.remove('text-red-600');
+            shieldSvg.classList.replace('text-red-600', 'text-purple-500');
         }
 
-        // CALCULADORA PC
+        // MISIONES
+        function openMision(id) {
+            document.getElementById('modal-mision').classList.add('active');
+        }
+
+        function closeMision() {
+            document.getElementById('modal-mision').classList.remove('active');
+        }
+
+        function checkMision(isCorrect) {
+            if(isCorrect) {
+                alert("¡CORRECTO! +1 Nivel de Seguridad");
+                misionesCompletadas = 1;
+                document.getElementById('misiones-count').innerText = "1 / 5";
+                document.getElementById('mision-1-card').classList.replace('border-purple-500', 'border-green-500');
+                document.getElementById('main-shield').classList.add('scale-110');
+                setTimeout(() => document.getElementById('main-shield').classList.remove('scale-110'), 300);
+                closeMision();
+            } else {
+                alert("Incorrecto. La seguridad es lo primero, intenta de nuevo.");
+            }
+        }
+
+        // CALCULADORA
         function calcularIA() {
             const cpu = parseInt(document.getElementById('cpu-select').value);
-            const score = cpu + 2; // Simulación simple
-            document.getElementById('result-ia').classList.remove('hidden');
-            document.getElementById('score-text').innerText = score > 4 ? "ALTA" : "MEDIA";
-            document.getElementById('advice-text').innerText = "Apto para el ecosistema Pi.";
+            const resDiv = document.getElementById('result-ia');
+            resDiv.classList.remove('hidden');
+            document.getElementById('score-text').innerText = cpu >= 4 ? "ALTA" : "MEDIA";
         }
+
+        window.onload = () => console.log("Pi Security cargada.");
     </script>
 </body>
 </html>
