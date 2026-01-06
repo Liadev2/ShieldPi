@@ -3,44 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pi Guardian MVP</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <title>Pi Security MVP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .shield-glow { box-shadow: 0 0 22px rgba(168, 85, 247, 0.6); }
+        .alert-red { border: 3px solid #ef4444; animation: shake 0.5s; }
+
+        .pi-font {
+            font-family: "Times New Roman", "STIX Two Math", serif;
+        }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+    </style>
 </head>
-<body>
 
-    <div id="app-container">
-        <section id="home" class="screen active">
-            <h1>🛡️ Pi Guardian</h1>
-            <p>Aprende a proteger la red y optimizar tu Nodo.</p>
-            <button onclick="showScreen('mision1')">Empezar Misión</button>
-            <button onclick="showScreen('checklist')">Test de Salud del Nodo</button>
-        </section>
+<body class="bg-slate-900 text-white font-sans pb-20">
 
-        <section id="mision1" class="screen">
-            <h2>Misión 1: El Portal Invisible</h2>
-            <div id="mision-content">
-                <p id="mision-text">El manual dice que el Nodo necesita puertos específicos. ¿Qué haces?</p>
-                <button onclick="checkMision('A')">Abrir todos (1-65535)</button>
-                <button onclick="checkMision('B')">Abrir 31400-31409</button>
+    <section id="home" class="p-6 flex flex-col items-center">
+        <h1 class="text-2xl font-bold text-purple-400 mb-2">PI SECURITY</h1>
+        <p class="text-xs text-slate-400 mb-8 text-center">Educación y Seguridad Blockchain</p>
+
+        <!-- ESCUDO CIBERSEGURIDAD -->
+        <div id="main-shield"
+            class="w-48 h-48 flex items-center justify-center shield-glow mb-6 transition-all duration-500 cursor-pointer">
+            
+            <svg viewBox="0 0 24 24" class="w-full h-full text-purple-500">
+                <path fill="currentColor"
+                    d="M12 2L4 5V11C4 16.5 7.8 21.7 12 22C16.2 21.7 20 16.5 20 11V5L12 2Z"/>
+                <text x="12" y="15"
+                    text-anchor="middle"
+                    font-size="8"
+                    class="fill-purple-200 pi-font">π</text>
+            </svg>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 w-full max-w-sm">
+            <div class="bg-slate-800 p-3 rounded-xl text-center">
+                <p class="text-[10px] text-slate-400">NODO</p>
+                <p id="status-nodo" class="text-sm font-bold text-green-400">ACTIVO</p>
             </div>
-            <button class="back-btn" onclick="showScreen('home')">Volver</button>
-        </section>
+            <div class="bg-slate-800 p-3 rounded-xl text-center">
+                <p class="text-[10px] text-slate-400">PUERTOS</p>
+                <p class="text-sm font-bold text-yellow-400">OPEN</p>
+            </div>
+        </div>
+    </section>
 
-        <section id="checklist" class="screen">
-            <h2>📊 Diagnóstico de Salud</h2>
-            <div id="quiz-container">
-                </div>
-            <button class="back-btn" onclick="showScreen('home')">Volver</button>
-        </section>
+    <section class="p-6 bg-slate-800 mx-4 rounded-2xl">
+        <h2 class="text-lg font-bold mb-4 flex items-center">🛡️ Detector de Scams</h2>
 
-        <section id="results" class="screen">
-            <h2 id="result-title"></h2>
-            <p id="result-text"></p>
-            <button onclick="showScreen('home')">Finalizar</button>
-        </section>
-    </div>
+        <input type="text" id="scam-input"
+            placeholder="Pega dirección o frase aquí..."
+            class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-purple-500">
 
-    <script src="script.js"></script>
+        <div id="scan-result" class="mt-4 p-3 rounded-lg hidden text-center font-bold text-sm"></div>
+    </section>
+
+    <nav class="fixed bottom-0 w-full bg-slate-900 border-t border-slate-800 flex justify-around p-4 text-[10px] text-slate-500">
+        <div class="text-purple-400 font-bold">HOME</div>
+        <div>MISIONES</div>
+        <div>PREMIUM</div>
+        <div>PC-IA</div>
+    </nav>
+
+    <script>
+        const scamInput = document.getElementById('scam-input');
+        const scanResult = document.getElementById('scan-result');
+        const shield = document.getElementById('main-shield');
+
+        function checkSeedPhrase(text) {
+            const words = text.trim().split(/\s+/);
+            return (words.length === 12 || words.length === 24);
+        }
+
+        const blacklist = ["GB6Y...FAKE", "GA2X...SCAM", "http://pi-fake.com"];
+
+        scamInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            scanResult.classList.remove('hidden');
+
+            if (checkSeedPhrase(val)) {
+                scanResult.innerText = "❌ ¡ALERTA! ESTO ES UNA SEED PHRASE. NUNCA LA COMPARTAS.";
+                scanResult.className = "mt-4 p-3 rounded-lg bg-red-600 text-white alert-red";
+                shield.classList.add("text-red-500");
+                return;
+            }
+
+            if (blacklist.includes(val)) {
+                scanResult.innerText = "🔴 DIRECCIÓN REPORTADA POR SCAM";
+                scanResult.className = "mt-4 p-3 rounded-lg bg-red-500/20 text-red-400";
+            } else if (val.length > 5) {
+                scanResult.innerText = "🟡 SIN HISTORIAL. PROCEDE CON CAUTELA.";
+                scanResult.className = "mt-4 p-3 rounded-lg bg-yellow-500/20 text-yellow-400";
+            } else {
+                scanResult.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
