@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>
-       Pi.init({ version: "2.0" });
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shield-π | Educational Node Security</title>
+    
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root { --pi-purple: #830da7; --pi-gold: #ca8a04; --pi-dark: #070b14; --neon-cyan: #00f2ff; }
         body { background: var(--pi-dark); font-family: 'Orbitron', sans-serif; color: #cbd5e1; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .font-pi-sym { font-family: 'Cinzel', serif; }
-        
-        /* ESCUDO ORIGINAL MANTENIDO */
         .shield-wrapper { display: flex; justify-content: center; align-items: center; margin: 20px 0 40px 0; cursor: pointer; }
         .pi-shield {
             position: relative; width: 220px; height: 280px;
@@ -33,19 +28,11 @@
             border-radius: 18% 18% 22% 22% / 12% 12% 30% 30%; z-index: -1;
         }
         .pi-symbol { font-family: "Times New Roman", serif; font-size: 140px; color: #cfcfcf; text-shadow: 0 10px 20px rgba(0,0,0,.6); z-index: 5; }
-
-        /* DIPLOMA TECNOLÓGICO */
         .academic-cert {
             background: radial-gradient(circle at center, #111827 0%, #000000 100%);
             color: var(--neon-cyan); padding: 25px; border: 2px solid var(--neon-cyan);
             position: relative; text-align: center; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
         }
-        .cert-corner { position: absolute; width: 15px; height: 15px; border: 2px solid var(--pi-purple); }
-        .top-l { top: 0; left: 0; border-right: 0; border-bottom: 0; }
-        .top-r { top: 0; right: 0; border-left: 0; border-bottom: 0; }
-        .bot-l { bottom: 0; left: 0; border-right: 0; border-top: 0; }
-        .bot-r { bottom: 0; right: 0; border-left: 0; border-top: 0; }
-        
         .hidden-screen { display: none; }
         .nav-active { color: var(--pi-purple) !important; border-top: 2px solid var(--pi-purple); }
         .mision-card { background: rgba(131, 13, 167, 0.05); border: 1px solid rgba(131, 13, 167, 0.2); }
@@ -67,30 +54,23 @@
             <h1 class="text-3xl font-black text-purple-500 italic uppercase tracking-tighter">Shield-<span class="font-pi-sym">π</span></h1>
             <p id="t-subtitle" class="text-[8px] tracking-[4px] text-slate-500 font-bold uppercase"></p>
         </header>
-
         <div class="shield-wrapper" onclick="startPortAudit()">
-            <div class="pi-shield">
-                <div class="pi-symbol">π</div>
-            </div>
+            <div class="pi-shield"><div class="pi-symbol">π</div></div>
         </div>
-
         <div class="space-y-3 mb-6">
             <div id="audit-status" class="bg-black/60 border border-slate-800 rounded-lg p-3 text-center min-h-[40px] flex items-center justify-center">
                 <p id="t-standby" class="text-[9px] text-slate-500 uppercase font-bold tracking-[2px]"></p>
             </div>
             <div id="port-grid" class="grid grid-cols-5 gap-1 hidden"></div>
-            
             <div class="flex justify-between items-center bg-purple-900/10 p-3 rounded-lg border border-purple-500/20">
                 <span id="t-progress" class="text-[9px] font-bold uppercase text-purple-400"></span>
                 <span id="progreso-text" class="text-xs font-bold text-white">0%</span>
             </div>
         </div>
-
         <div class="mb-8">
             <input type="text" id="scam-detector" class="w-full bg-black/40 border border-purple-900/30 rounded-xl py-4 px-5 text-[10px] outline-none focus:border-purple-500 text-white" spellcheck="false">
             <p id="scam-result-text" class="text-[9px] mt-2 text-center font-bold uppercase tracking-wider min-h-[15px]"></p>
         </div>
-
         <div class="bg-gradient-to-r from-purple-900/20 to-transparent border-l-4 border-purple-600 p-5 rounded-r-2xl">
             <h3 id="t-man-title" class="text-[10px] text-purple-400 mb-2 font-bold uppercase italic"></h3>
             <p id="t-man-text" class="text-[9px] text-slate-400 italic leading-relaxed"></p>
@@ -116,72 +96,30 @@
         <div id="misiones-list" class="space-y-5"></div>
     </main>
 
-            <!-- === SOLO CAMBIO: DIPLOMA REDISEÑADO | TODO LO DEMÁS ES IDÉNTICO === -->
-
-<!-- REEMPLAZA ÚNICAMENTE EL BLOQUE <main id="screen-premium"> POR ESTE -->
-
-<main id="screen-premium" class="screen hidden-screen p-6 text-center">
-    <div class="academic-cert mb-8 relative overflow-hidden">
-        
-        <!-- Glow -->
-        <div class="absolute inset-0 bg-purple-600/10 blur-2xl"></div>
-
-        <!-- Header -->
-        <div class="relative z-10 mb-6">
-            <div class="text-5xl font-pi-sym text-purple-500 drop-shadow-lg">π</div>
-            <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">
-                Shield-π Cybersecurity Academy
-            </h2>
-            <p class="text-[8px] text-purple-300 tracking-widest uppercase mt-1">
-                Official Node Security Certification
-            </p>
-        </div>
-
-        <!-- Seal -->
-        <div class="relative z-10 my-6 flex justify-center">
-            <div class="w-28 h-28 rounded-full border-4 border-purple-500 flex items-center justify-center bg-black shadow-xl">
-                <!-- Lock Icon -->
-                <svg width="42" height="42" viewBox="0 0 24 24" fill="none"
-                     stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
+    <main id="screen-premium" class="screen hidden-screen p-6 text-center">
+        <div class="academic-cert mb-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-purple-600/10 blur-2xl"></div>
+            <div class="relative z-10 mb-6">
+                <div class="text-5xl font-pi-sym text-purple-500 drop-shadow-lg">π</div>
+                <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">Shield-π Cybersecurity Academy</h2>
+            </div>
+            <div class="relative z-10 my-6 flex justify-center">
+                <div class="w-28 h-28 rounded-full border-4 border-purple-500 flex items-center justify-center bg-black shadow-xl">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+            </div>
+            <div class="relative z-10 border-y border-purple-500/30 py-6 my-4 bg-purple-900/20">
+                <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4"></p>
             </div>
         </div>
 
-        <!-- Body -->
-        <div class="relative z-10 border-y border-purple-500/30 py-6 my-4 bg-purple-900/20">
-            <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4">
-                THIS CERTIFICATE VALIDATES THE PIONEER’S KNOWLEDGE IN NODE SECURITY,
-                PORT MANAGEMENT AND BLOCKCHAIN INFRASTRUCTURE PROTECTION.
-            </p>
-        </div>
-
-        <!-- Footer -->
-        <div class="relative z-10 flex justify-between mt-6 text-[7px] font-bold uppercase">
-            <span class="text-purple-400">Issuer: Shield-π Protocol</span>
-            <span class="text-green-500">Status: Verified Pioneer</span>
-        </div>
-    </div>
-
-    <button onclick="pay(0.3, 'DIPLOMA_CERT')"
-        class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8 shadow-lg active:scale-95 transition-all">
-        0.3 π – Sign Certificate
-    </button>
-
-    <div class="bg-slate-800/20 p-6 border border-slate-800 rounded-2xl">
-        <p id="t-support" class="text-[10px] italic mb-5 text-slate-500"></p>
+        <button onclick="pay(0.3, 'DIPLOMA_CERT')" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8 shadow-lg active:scale-95 transition-all">0.3 π – Sign Certificate</button>
+        
         <div class="flex gap-3">
-            <button onclick="pay(0.14, 'TIP_S')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">
-                0.14 π
-            </button>
-            <button onclick="pay(3.14, 'TIP_L')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">
-                3.14 π
-            </button>
+            <button onclick="pay(0.14, 'TIP_S')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold text-white">0.14 π</button>
+            <button onclick="pay(3.14, 'TIP_L')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold text-white">3.14 π</button>
         </div>
-    </div>
-</main>
-
+    </main>
 
     <nav class="fixed bottom-0 w-full bg-slate-900/95 border-t border-purple-900/30 flex justify-around p-5 text-[9px] font-bold backdrop-blur-md">
         <button onclick="nav('home')" id="nav-home" class="nav-active">START</button>
@@ -191,8 +129,13 @@
     </nav>
 
     <script>
-        const Pi = window.Pi; 
-        Pi.init({ version: "2.0", sandbox: false });
+        // INICIALIZACIÓN ÚNICA Y SEGURA
+        window.onload = function() {
+            if (window.Pi) {
+                window.Pi.init({ version: "2.0", sandbox: false });
+                console.log("Pi SDK Initialized on " + window.location.host);
+            }
+        };
 
         let currentLang = 'en';
         let prog = 0;
@@ -200,26 +143,26 @@
         const langData = {
             en: {
                 subtitle: "secure blockchain node tool", standby: "System: Standby", progress: "Academy Progress",
-                manTitle: "Privacy Manifesto", manText: "Educational tool only. Shield-π does not store, collect or transmit any Pioneer data. All scans are local.",
-                scamPlaceholder: "Paste link to analyze security...", scamSafe: "✓ VERIFIED BY COMMUNITY BLACKLIST", scamAlert: "🚨 DANGER: PHISHING PATTERN DETECTED!",
+                manTitle: "Privacy Manifesto", manText: "Educational tool only. Shield-π does not store or transmit any Pioneer data. All scans are local.",
+                scamPlaceholder: "Paste link to analyze...", scamSafe: "✓ VERIFIED BY COMMUNITY", scamAlert: "🚨 PHISHING DETECTED!",
                 nodeTitle: "Infrastructure & AI", calcTitle: "Hardware Audit Tool",
-                req1: "CPU 4+ Cores: Required for Stellar-Core consensus layers.",
-                req2: "SSD Storage: High speed I/O needed for blockchain sync.",
-                req3: "Docker: Containerized environment for node stability.",
-                certHead: "Node Protocol Certificate", certBody: "THIS DOCUMENT CERTIFIES THE PIONEER'S COMPETENCE IN NODE SECURITY, PORT MAPPING AND BLOCKCHAIN INFRASTRUCTURE INTEGRITY.",
-                support: "Support this educational tool", navHome: "START", navQuest: "QUESTS", navNode: "NODE", navPro: "PRO",
+                req1: "CPU 4+ Cores: Required for Stellar-Core layers.",
+                req2: "SSD Storage: Needed for blockchain sync.",
+                req3: "Docker: Environment for node stability.",
+                certBody: "THIS CERTIFICATE VALIDATES KNOWLEDGE IN NODE SECURITY AND INFRASTRUCTURE PROTECTION.",
+                navHome: "START", navQuest: "QUESTS", navNode: "NODE", navPro: "PRO",
                 nodeApt: "✓ SYSTEM READY", nodeFail: "⚠ UPGRADE REQUIRED"
             },
             es: {
                 subtitle: "herramienta de nodo seguro", standby: "Sistema: En espera", progress: "Progreso Academia",
-                manTitle: "Manifiesto de Privacidad", manText: "Herramienta educativa. Shield-π no guarda, recolecta ni transmite datos. Todo el análisis es local.",
-                scamPlaceholder: "Pega el link para analizar...", scamSafe: "✓ VERIFICADO POR LISTA NEGRA COMUNITARIA", scamAlert: "🚨 PELIGRO: PATRÓN DE PHISHING DETECTADO!",
+                manTitle: "Manifiesto de Privacidad", manText: "Herramienta educativa. Shield-π no guarda ni transmite datos. Todo el análisis es local.",
+                scamPlaceholder: "Pega el link para analizar...", scamSafe: "✓ VERIFICADO POR LA COMUNIDAD", scamAlert: "🚨 PHISHING DETECTADO!",
                 nodeTitle: "Infraestructura e IA", calcTitle: "Auditoría de Hardware",
-                req1: "CPU 4+ Núcleos: Requerido para capas de consenso Stellar.",
-                req2: "Disco SSD: Alta velocidad necesaria para sincronización.",
-                req3: "Docker: Entorno de contenedores para estabilidad.",
-                certHead: "Certificado de Protocolo", certBody: "ESTE DOCUMENTO CERTIFICA LA COMPETENCIA DEL PIONEER EN SEGURIDAD DE NODO, MAPEADO DE PUERTOS E INTEGRIDAD DE RED.",
-                support: "Apoya esta herramienta educativa", navHome: "INICIO", navQuest: "MISIONES", navNode: "NODO", navPro: "PREMIUM",
+                req1: "CPU 4+ Núcleos: Requerido para capas Stellar.",
+                req2: "Disco SSD: Necesario para sincronización.",
+                req3: "Docker: Entorno para estabilidad del nodo.",
+                certBody: "ESTE CERTIFICADO VALIDA EL CONOCIMIENTO EN SEGURIDAD DE NODO Y PROTECCIÓN DE RED.",
+                navHome: "INICIO", navQuest: "MISIONES", navNode: "NODO", navPro: "PREMIUM",
                 nodeApt: "✓ SISTEMA APTO", nodeFail: "⚠ REQUIERE MEJORA"
             }
         };
@@ -240,9 +183,7 @@
             document.getElementById('scam-detector').placeholder = d.scamPlaceholder;
             document.getElementById('t-node-title').innerText = d.nodeTitle;
             document.getElementById('t-calc-title').innerText = d.calcTitle;
-            
             document.getElementById('t-cert-body').innerText = d.certBody;
-            document.getElementById('t-support').innerText = d.support;
             document.getElementById('nav-home').innerText = d.navHome;
             document.getElementById('nav-misiones').innerText = d.navQuest;
             document.getElementById('nav-node').innerText = d.navNode;
@@ -265,11 +206,11 @@
             status.innerHTML = `<p class="text-[9px] text-purple-400 animate-pulse font-bold uppercase">Scanning Network Infrastructure...</p>`;
             for(let p=31400; p<=31409; p++) {
                 const d = document.createElement('div');
-                d.className = "bg-slate-900 border border-slate-800 p-1 text-[7px] rounded text-center";
+                d.className = "bg-slate-900 border border-slate-800 p-1 text-[7px] rounded text-center text-white";
                 d.innerHTML = `${p}<br>...`; grid.appendChild(d);
                 setTimeout(() => {
                     const ok = Math.random() > 0.3;
-                    d.className = `p-1 border text-[7px] text-center rounded ${ok?'border-green-500 bg-green-900/20':'border-red-900 bg-red-900/40'}`;
+                    d.className = `p-1 border text-[7px] text-center rounded ${ok?'border-green-500 bg-green-900/20 text-white':'border-red-900 bg-red-900/40 text-white'}`;
                     d.innerHTML = `${p}<br>${ok?'OPEN':'CLOSED'}`;
                     if(p===31409) status.innerHTML = `<p class="text-[9px] font-bold text-green-500 uppercase tracking-widest">LOCAL NODE INTEGRITY: VERIFIED</p>`;
                 }, (p-31399)*120);
@@ -281,7 +222,6 @@
             const t = document.getElementById('scam-result-text');
             const scams = ["wallet-pi", "claim", "semilla", "seed", "passphrase", "gift", "airdrop"];
             const isSuspicious = scams.some(s => v.includes(s)) || (v.includes("http") && !v.includes("minepi.com"));
-            
             if(v.length > 4) {
                 t.innerText = isSuspicious ? langData[currentLang].scamAlert : langData[currentLang].scamSafe;
                 t.style.color = isSuspicious ? "#ef4444" : "#22c55e";
@@ -311,13 +251,20 @@
         }
 
         async function pay(amount, memo) {
+            if (!window.Pi) {
+                alert("Pi SDK not loaded");
+                return;
+            }
             try { 
-                const payment = await Pi.createPayment({ amount, memo }, {
-                    onReadyForServerCompletion: (paymentId) => { console.log("Done", paymentId); },
+                const payment = await window.Pi.createPayment({ amount, memo }, {
+                    onReadyForServerCompletion: (paymentId) => { console.log("Payment Ready", paymentId); },
                     onCancel: (paymentId) => { console.log("Cancelled", paymentId); },
-                    onError: (error, payment) => { console.error(error); }
+                    onError: (error, payment) => { console.error("Error", error); }
                 });
-            } catch(e) { alert("Please use Pi Browser for payments."); }
+            } catch(e) { 
+                console.error(e);
+                alert("Please use Pi Browser on shieldpi6230.pinet.com"); 
+            }
         }
 
         function runIAAudit() {
