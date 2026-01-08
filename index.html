@@ -129,21 +129,22 @@
     </nav>
 
     <script>
-        // INICIALIZACIÓN ÚNICA Y SEGURA
-            window.onload = function() {
-    if (window.Pi) {
-        // Usamos una versión específica y quitamos restricciones de sandbox temporalmente
-        window.Pi.init({ version: "2.0", sandbox: true }); 
-        
-        // Verificamos si el usuario está logueado, esto "despierta" al SDK
-        window.Pi.authenticate(['payments']).then(function(auth) {
-            console.log("Autenticado como: " + auth.user.username);
-            document.getElementById('pi-browser-tag').innerText = "CONNECTED: " + auth.user.username;
-        }).catch(function(e) {
-            console.error(e);
-        });
-    }
-};
+        // --- 1. INICIALIZACIÓN Y AUTENTICACIÓN (CORREGIDO PARA PAGOS) ---
+        window.onload = function() {
+            if (window.Pi) {
+                // Forzamos sandbox false para que valide el dominio real de GitHub
+                window.Pi.init({ version: "2.0", sandbox: false });
+                
+                // Es obligatorio autenticar antes de llamar a createPayment
+                window.Pi.authenticate(['payments', 'username']).then(function(auth) {
+                    console.log("Sesión activa: " + auth.user.username);
+                    document.getElementById('pi-browser-tag').innerText = "CONNECTED: " + auth.user.username;
+                    document.getElementById('pi-browser-tag').classList.replace('opacity-50', 'opacity-100');
+                }).catch(function(e) {
+                    console.error("Auth Error:", e);
+                });
+            }
+        };
 
         let currentLang = 'en';
         let prog = 0;
@@ -164,7 +165,7 @@
             es: {
                 subtitle: "herramienta de nodo seguro", standby: "Sistema: En espera", progress: "Progreso Academia",
                 manTitle: "Manifiesto de Privacidad", manText: "Herramienta educativa. Shield-π no guarda ni transmite datos. Todo el análisis es local.",
-                scamPlaceholder: "Pega el link para analizar...", scamSafe: "✓ VERIFICADO POR LA COMUNIDAD", scamAlert: "🚨 PHISHING DETECTADO!",
+                scamPlaceholder: "Pega el link para analizar...", scamSafe: "✓ VERIFICADO POR LA COMUNIDAD", scamAlert: "🚨 PHISHING DETECTED!",
                 nodeTitle: "Infraestructura e IA", calcTitle: "Auditoría de Hardware",
                 req1: "CPU 4+ Núcleos: Requerido para capas Stellar.",
                 req2: "Disco SSD: Necesario para sincronización.",
@@ -258,20 +259,35 @@
             } else { alert("Incorrect Protocol"); }
         }
 
+        // --- 2. FUNCIÓN DE PAGO (REVISADA Y SEGURA) ---
         async function pay(amount, memo) {
             if (!window.Pi) {
                 alert("Pi SDK not loaded");
                 return;
             }
             try { 
-                const payment = await window.Pi.createPayment({ amount, memo }, {
-                    onReadyForServerCompletion: (paymentId) => { console.log("Payment Ready", paymentId); },
-                    onCancel: (paymentId) => { console.log("Cancelled", paymentId); },
-                    onError: (error, payment) => { console.error("Error", error); }
+                // Aseguramos que el usuario esté logueado antes de lanzar el pago
+                await window.Pi.authenticate(['payments']);
+
+                const payment = await window.Pi.createPayment({ 
+                    amount: amount, 
+                    memo: memo,
+                    metadata: { app: "shield-pi-edu" }
+                }, {
+                    onReadyForServerCompletion: (paymentId, txid) => { 
+                        console.log("Pago listo:", paymentId); 
+                        alert("Payment Ready! ID: " + paymentId);
+                    },
+                    onCancel: (paymentId) => { console.log("User cancelled payment"); },
+                    onError: (error, payment) => { 
+                        console.error("SDK Error:", error);
+                        alert("SDK Error: " + error.message);
+                    }
                 });
             } catch(e) { 
-                console.error(e);
-                alert("Please use Pi Browser on shieldpi6230.pinet.com"); 
+                console.error("Catch Error:", e);
+                // Si el error dice "Please use Pi Browser", es que el authenticate falló
+                alert("Security Error: Por favor entra desde shieldpi6230.pinet.com"); 
             }
         }
 
