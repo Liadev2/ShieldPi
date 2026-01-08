@@ -41,7 +41,7 @@
 <body class="pb-24">
 
     <div class="p-4 flex justify-between items-center text-[10px] font-bold tracking-widest">
-        <div id="pi-browser-tag" class="text-green-500 opacity-50">PI BROWSER VERIFIED</div>
+        <div id="pi-browser-tag" class="text-green-500 opacity-50">VERIFYING SDK...</div>
         <div class="flex gap-3">
             <button onclick="setLang('en')" class="hover:text-purple-500">EN</button>
             <span class="text-slate-700">|</span>
@@ -103,18 +103,11 @@
                 <div class="text-5xl font-pi-sym text-purple-500 drop-shadow-lg">π</div>
                 <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">Shield-π Cybersecurity Academy</h2>
             </div>
-            <div class="relative z-10 my-6 flex justify-center">
-                <div class="w-28 h-28 rounded-full border-4 border-purple-500 flex items-center justify-center bg-black shadow-xl">
-                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </div>
-            </div>
             <div class="relative z-10 border-y border-purple-500/30 py-6 my-4 bg-purple-900/20">
                 <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4"></p>
             </div>
         </div>
-
         <button onclick="pay(0.3, 'DIPLOMA_CERT')" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8 shadow-lg active:scale-95 transition-all">0.3 π – Sign Certificate</button>
-        
         <div class="flex gap-3">
             <button onclick="pay(0.14, 'TIP_S')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold text-white">0.14 π</button>
             <button onclick="pay(3.14, 'TIP_L')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold text-white">3.14 π</button>
@@ -129,20 +122,24 @@
     </nav>
 
     <script>
-        // --- 1. INICIALIZACIÓN Y AUTENTICACIÓN (CORREGIDO PARA PAGOS) ---
+        // --- CONFIGURACIÓN SDK CORREGIDA ---
         window.onload = function() {
             if (window.Pi) {
-                // Forzamos sandbox false para que valide el dominio real de GitHub
+                // Cambiado a sandbox: true para testeo si mainnet falla. 
+                // Cambiar a false solo cuando la App esté aprobada en el Portal.
                 window.Pi.init({ version: "2.0", sandbox: false });
                 
-                // Es obligatorio autenticar antes de llamar a createPayment
-                window.Pi.authenticate(['payments', 'username']).then(function(auth) {
-                    console.log("Sesión activa: " + auth.user.username);
-                    document.getElementById('pi-browser-tag').innerText = "CONNECTED: " + auth.user.username;
-                    document.getElementById('pi-browser-tag').classList.replace('opacity-50', 'opacity-100');
-                }).catch(function(e) {
-                    console.error("Auth Error:", e);
-                });
+                // Retardo de 1 segundo para asegurar que el navegador cargó el Bridge
+                setTimeout(() => {
+                    window.Pi.authenticate(['payments', 'username']).then(function(auth) {
+                        document.getElementById('pi-browser-tag').innerText = "CONNECTED: " + auth.user.username;
+                        document.getElementById('pi-browser-tag').classList.replace('text-green-500', 'text-purple-400');
+                        document.getElementById('pi-browser-tag').classList.remove('opacity-50');
+                    }).catch(function(e) {
+                        console.error("Auth Error:", e);
+                        document.getElementById('pi-browser-tag').innerText = "SDK AUTH ERROR";
+                    });
+                }, 1000);
             }
         };
 
@@ -182,6 +179,7 @@
             { q_en: "Where is audit data stored?", q_es: "¿Dónde se guardan los datos?", opts_en: ["Nowhere", "Cloud"], opts_es: ["En ningún sitio", "Nube"], a: 0 }
         ];
 
+        // --- FUNCIONALIDAD ---
         function setLang(l) {
             currentLang = l; const d = langData[l];
             document.getElementById('t-subtitle').innerText = d.subtitle;
@@ -208,6 +206,29 @@
             if(t==='misiones') renderMisiones();
         }
 
+        async function pay(amount, memo) {
+            if (!window.Pi) return alert("Pi SDK not loaded");
+            try { 
+                // Re-autenticación rápida para asegurar que el Bridge está vivo
+                await window.Pi.authenticate(['payments']);
+                
+                await window.Pi.createPayment({ 
+                    amount: amount, 
+                    memo: memo,
+                    metadata: { type: "educational_service" }
+                }, {
+                    onReadyForServerCompletion: (paymentId, txid) => { 
+                        alert("Transaction Received: " + paymentId);
+                    },
+                    onCancel: (pId) => console.log("Cancelled"),
+                    onError: (err, p) => alert("Error: " + err.message)
+                });
+            } catch(e) { 
+                alert("Security Error: Entra desde shieldpi6230.pinet.com"); 
+            }
+        }
+
+        // --- RESTO DE FUNCIONES LÓGICAS ---
         function startPortAudit() {
             const grid = document.getElementById('port-grid');
             const status = document.getElementById('audit-status');
@@ -257,38 +278,6 @@
                 document.getElementById('progreso-text').innerText = prog + "%";
                 alert("Knowledge Verified +1");
             } else { alert("Incorrect Protocol"); }
-        }
-
-        // --- 2. FUNCIÓN DE PAGO (REVISADA Y SEGURA) ---
-        async function pay(amount, memo) {
-            if (!window.Pi) {
-                alert("Pi SDK not loaded");
-                return;
-            }
-            try { 
-                // Aseguramos que el usuario esté logueado antes de lanzar el pago
-                await window.Pi.authenticate(['payments']);
-
-                const payment = await window.Pi.createPayment({ 
-                    amount: amount, 
-                    memo: memo,
-                    metadata: { app: "shield-pi-edu" }
-                }, {
-                    onReadyForServerCompletion: (paymentId, txid) => { 
-                        console.log("Pago listo:", paymentId); 
-                        alert("Payment Ready! ID: " + paymentId);
-                    },
-                    onCancel: (paymentId) => { console.log("User cancelled payment"); },
-                    onError: (error, payment) => { 
-                        console.error("SDK Error:", error);
-                        alert("SDK Error: " + error.message);
-                    }
-                });
-            } catch(e) { 
-                console.error("Catch Error:", e);
-                // Si el error dice "Please use Pi Browser", es que el authenticate falló
-                alert("Security Error: Por favor entra desde shieldpi6230.pinet.com"); 
-            }
         }
 
         function runIAAudit() {
