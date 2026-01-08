@@ -130,12 +130,20 @@
 
     <script>
         // INICIALIZACIÓN ÚNICA Y SEGURA
-        window.onload = function() {
-            if (window.Pi) {
-                window.Pi.init({ version: "2.0", sandbox: false });
-                console.log("Pi SDK Initialized on " + window.location.host);
-            }
-        };
+            window.onload = function() {
+    if (window.Pi) {
+        // Usamos una versión específica y quitamos restricciones de sandbox temporalmente
+        window.Pi.init({ version: "2.0", sandbox: true }); 
+        
+        // Verificamos si el usuario está logueado, esto "despierta" al SDK
+        window.Pi.authenticate(['payments']).then(function(auth) {
+            console.log("Autenticado como: " + auth.user.username);
+            document.getElementById('pi-browser-tag').innerText = "CONNECTED: " + auth.user.username;
+        }).catch(function(e) {
+            console.error(e);
+        });
+    }
+};
 
         let currentLang = 'en';
         let prog = 0;
