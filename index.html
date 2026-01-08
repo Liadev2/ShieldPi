@@ -111,31 +111,72 @@
         <div id="misiones-list" class="space-y-5"></div>
     </main>
 
-    <main id="screen-premium" class="screen hidden-screen p-6 text-center">
-        <div class="academic-cert mb-8">
-            <div class="cert-corner top-l"></div><div class="cert-corner top-r"></div>
-            <div class="cert-corner bot-l"></div><div class="cert-corner bot-r"></div>
-            <div class="relative z-10">
-                <div class="text-4xl text-purple-500 mb-2"><span class="font-pi-sym">π</span></div>
-                <h2 id="t-cert-head" class="text-[10px] font-black uppercase tracking-[3px] text-white mb-6"></h2>
-                <div class="border-y border-purple-500/30 py-6 my-4 bg-purple-500/5">
-                    <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4"></p>
-                </div>
-                <div class="flex justify-between items-end mt-8 text-[7px] font-bold">
-                    <div class="text-left text-purple-400 uppercase">Issuer: Shield-π Academy</div>
-                    <div class="text-right text-green-500 uppercase">Status: Verified Pioneer</div>
-                </div>
+            <!-- === SOLO CAMBIO: DIPLOMA REDISEÑADO | TODO LO DEMÁS ES IDÉNTICO === -->
+
+<!-- REEMPLAZA ÚNICAMENTE EL BLOQUE <main id="screen-premium"> POR ESTE -->
+
+<main id="screen-premium" class="screen hidden-screen p-6 text-center">
+    <div class="academic-cert mb-8 relative overflow-hidden">
+        
+        <!-- Glow -->
+        <div class="absolute inset-0 bg-purple-600/10 blur-2xl"></div>
+
+        <!-- Header -->
+        <div class="relative z-10 mb-6">
+            <div class="text-5xl font-pi-sym text-purple-500 drop-shadow-lg">π</div>
+            <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">
+                Shield-π Cybersecurity Academy
+            </h2>
+            <p class="text-[8px] text-purple-300 tracking-widest uppercase mt-1">
+                Official Node Security Certification
+            </p>
+        </div>
+
+        <!-- Seal -->
+        <div class="relative z-10 my-6 flex justify-center">
+            <div class="w-28 h-28 rounded-full border-4 border-purple-500 flex items-center justify-center bg-black shadow-xl">
+                <!-- Lock Icon -->
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none"
+                     stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
             </div>
         </div>
-        <button onclick="pay(0.3, 'DIPLOMA_CERT')" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8 shadow-lg active:scale-95 transition-all">0.3 π - Sign Certificate</button>
-        <div class="bg-slate-800/20 p-6 border border-slate-800 rounded-2xl">
-            <p id="t-support" class="text-[10px] italic mb-5 text-slate-500"></p>
-            <div class="flex gap-3">
-                <button onclick="pay(0.14, 'TIP_S')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">0.14 π</button>
-                <button onclick="pay(3.14, 'TIP_L')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">3.14 π</button>
-            </div>
+
+        <!-- Body -->
+        <div class="relative z-10 border-y border-purple-500/30 py-6 my-4 bg-purple-900/20">
+            <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4">
+                THIS CERTIFICATE VALIDATES THE PIONEER’S KNOWLEDGE IN NODE SECURITY,
+                PORT MANAGEMENT AND BLOCKCHAIN INFRASTRUCTURE PROTECTION.
+            </p>
         </div>
-    </main>
+
+        <!-- Footer -->
+        <div class="relative z-10 flex justify-between mt-6 text-[7px] font-bold uppercase">
+            <span class="text-purple-400">Issuer: Shield-π Protocol</span>
+            <span class="text-green-500">Status: Verified Pioneer</span>
+        </div>
+    </div>
+
+    <button onclick="pay(0.3, 'DIPLOMA_CERT')"
+        class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8 shadow-lg active:scale-95 transition-all">
+        0.3 π – Sign Certificate
+    </button>
+
+    <div class="bg-slate-800/20 p-6 border border-slate-800 rounded-2xl">
+        <p id="t-support" class="text-[10px] italic mb-5 text-slate-500"></p>
+        <div class="flex gap-3">
+            <button onclick="pay(0.14, 'TIP_S')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">
+                0.14 π
+            </button>
+            <button onclick="pay(3.14, 'TIP_L')" class="flex-1 bg-slate-800 py-3 rounded-lg text-[10px] font-bold">
+                3.14 π
+            </button>
+        </div>
+    </div>
+</main>
+
 
     <nav class="fixed bottom-0 w-full bg-slate-900/95 border-t border-purple-900/30 flex justify-around p-5 text-[9px] font-bold backdrop-blur-md">
         <button onclick="nav('home')" id="nav-home" class="nav-active">START</button>
@@ -194,7 +235,7 @@
             document.getElementById('scam-detector').placeholder = d.scamPlaceholder;
             document.getElementById('t-node-title').innerText = d.nodeTitle;
             document.getElementById('t-calc-title').innerText = d.calcTitle;
-            document.getElementById('t-cert-head').innerText = d.certHead;
+            
             document.getElementById('t-cert-body').innerText = d.certBody;
             document.getElementById('t-support').innerText = d.support;
             document.getElementById('nav-home').innerText = d.navHome;
