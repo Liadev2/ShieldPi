@@ -205,28 +205,34 @@
             document.getElementById('nav-' + t).classList.replace('text-slate-500', 'nav-active');
             if(t==='misiones') renderMisiones();
         }
-
         async function pay(amount, memo) {
-            if (!window.Pi) return alert("Pi SDK not loaded");
-            try { 
-                // Re-autenticación rápida para asegurar que el Bridge está vivo
-                await window.Pi.authenticate(['payments']);
-                
-                await window.Pi.createPayment({ 
-                    amount: amount, 
-                    memo: memo,
-                    metadata: { type: "educational_service" }
-                }, {
-                    onReadyForServerCompletion: (paymentId, txid) => { 
-                        alert("Transaction Received: " + paymentId);
-                    },
-                    onCancel: (pId) => console.log("Cancelled"),
-                    onError: (err, p) => alert("Error: " + err.message)
-                });
-            } catch(e) { 
-                alert("Security Error: Entra desde shieldpi6230.pinet.com"); 
+    if (!window.Pi) return alert("Pi SDK not loaded");
+    
+    // ELIMINAMOS el await window.Pi.authenticate aquí dentro.
+    // La autenticación ya se hizo al cargar la página.
+    
+    try { 
+        const payment = await window.Pi.createPayment({ 
+            amount: amount, 
+            memo: memo,
+            metadata: { type: "educational_service" }
+        }, {
+            onReadyForServerCompletion: (paymentId, txid) => { 
+                alert("Pago recibido: " + paymentId);
+                // Aquí deberías enviar el paymentId a tu servidor si tuvieras uno
+                window.Pi.openShareDialog("Shield-Pi", "He certificado mi nodo en Shield-Pi!");
+            },
+            onCancel: (pId) => { console.log("Cancelado por usuario"); },
+            onError: (err, p) => { 
+                console.error(err);
+                alert("Error de Red Pi: " + err.message); 
             }
-        }
+        });
+    } catch(e) { 
+        console.error(e);
+        alert("Error crítico: Si estás en Pi Browser, revisa que la App URL en el Developer Portal sea exactamente https://liadev2.github.io"); 
+    }
+}
 
         // --- RESTO DE FUNCIONES LÓGICAS ---
         function startPortAudit() {
